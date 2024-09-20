@@ -8,25 +8,25 @@ private:
     string color;
 
 public:
-    void setMaterial(string materialType) {
-        material = materialType;
+    void setMaterial(string material) {
+        this->material = material;
     }
 
-    void setColor(string barrelColor) {
-        color = barrelColor;
+    void setColor(string color) {
+        this->color = color;
     }
 
-    string getMaterial() {
+    string getMaterial() const {
         return material;
     }
 
-    string getColor() {
+    string getColor() const {
         return color;
     }
 
-    void displayBarrelInfo() {
-        cout << "Barrel Material: " << material << endl;
-        cout << "Barrel Color: " << color << endl;
+    void displayBarrelInfo() const {
+        cout << "Barrel Material: " << getMaterial() << endl;
+        cout << "Barrel Color: " << getColor() << endl;
     }
 };
 
@@ -36,20 +36,24 @@ private:
     Barrel barrel;
 
 public:
-    void setInkType(string ink) {
-        inkType = ink;
+    void setInkType(string inkType) {
+        this->inkType = inkType;
     }
 
-    void setBarrel(Barrel barrelObj) {
-        barrel = barrelObj;
+    void setBarrel(Barrel barrel) {
+        this->barrel = barrel;
     }
 
-    string getInkType() {
+    string getInkType() const {
         return inkType;
     }
 
-    void displayPenInfo() {
-        cout << "Ink Type: " << inkType << endl;
+    Barrel getBarrel() const {
+        return barrel;
+    }
+
+    void displayPenInfo() const {
+        cout << "Ink Type: " << getInkType() << endl;
         barrel.displayBarrelInfo();
     }
 };
@@ -64,6 +68,10 @@ int main() {
     myPen.setBarrel(myBarrel);
 
     myPen.displayPenInfo();
+
+    cout << "\nPen's ink type using getter: " << myPen.getInkType() << endl;
+    cout << "Barrel's material using getter: " << myPen.getBarrel().getMaterial() << endl;
+    cout << "Barrel's color using getter: " << myPen.getBarrel().getColor() << endl;
 
     return 0;
 }
