@@ -8,25 +8,26 @@ private:
     string color;
 
 public:
-    void setMaterial(string materialType) {
-        material = materialType;
+
+    void setMaterial(string material) {
+        this->material = material;
     }
 
-    void setColor(string barrelColor) {
-        color = barrelColor;
+    void setColor(string color) {
+        this->color = color;
     }
 
-    string getMaterial() {
+    string getMaterial() const {
         return material;
     }
 
-    string getColor() {
+    string getColor() const {
         return color;
     }
 
-    void displayBarrelInfo() {
-        cout << "Barrel Material: " << material << endl;
-        cout << "Barrel Color: " << color << endl;
+    void displayBarrelInfo() const {
+        cout << "Barrel Material: " << getMaterial() << endl;
+        cout << "Barrel Color: " << getColor() << endl;
     }
 };
 
@@ -36,34 +37,57 @@ private:
     Barrel barrel;
 
 public:
-    void setInkType(string ink) {
-        inkType = ink;
+    void setInkType(string inkType) {
+        this->inkType = inkType;
     }
 
-    void setBarrel(Barrel barrelObj) {
-        barrel = barrelObj;
+    void setBarrel(Barrel barrel) {
+        this->barrel = barrel;
     }
 
-    string getInkType() {
+    string getInkType() const {
         return inkType;
     }
 
-    void displayPenInfo() {
-        cout << "Ink Type: " << inkType << endl;
+    Barrel getBarrel() const {
+        return barrel;
+    }
+
+    void displayPenInfo() const {
+        cout << "Ink Type: " << getInkType() << endl;
         barrel.displayBarrelInfo();
     }
 };
 
 int main() {
-    Barrel myBarrel;
-    myBarrel.setMaterial("Plastic");
-    myBarrel.setColor("Blue");
+    const int numPens = 2;
+    Pen penArray[numPens];  
 
-    Pen myPen;
-    myPen.setInkType("Gel");
-    myPen.setBarrel(myBarrel);
+    for (int i = 0; i < numPens; i++) {
+        string inkType, barrelMaterial, barrelColor;
 
-    myPen.displayPenInfo();
+        cout << "\nEnter details for Pen " << i + 1 << ":" << endl;
+
+
+        cout << "Enter ink type: ";
+        cin >> inkType;
+        penArray[i].setInkType(inkType);
+
+        cout << "Enter barrel material: ";
+        cin >> barrelMaterial;
+        cout << "Enter barrel color: ";
+        cin >> barrelColor;
+
+        Barrel tempBarrel;
+        tempBarrel.setMaterial(barrelMaterial);
+        tempBarrel.setColor(barrelColor);
+
+        penArray[i].setBarrel(tempBarrel);
+    }
+    for (int i = 0; i < numPens; i++) {
+        cout << "\nPen " << i + 1 << " Information:\n";
+        penArray[i].displayPenInfo();
+    }
 
     return 0;
 }
