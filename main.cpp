@@ -8,6 +8,7 @@ private:
     string color;
 
 public:
+
     void setMaterial(string material) {
         this->material = material;
     }
@@ -59,19 +60,34 @@ public:
 };
 
 int main() {
-    Barrel myBarrel;
-    myBarrel.setMaterial("Plastic");
-    myBarrel.setColor("Blue");
+    const int numPens = 2;
+    Pen penArray[numPens];  
 
-    Pen myPen;
-    myPen.setInkType("Gel");
-    myPen.setBarrel(myBarrel);
+    for (int i = 0; i < numPens; i++) {
+        string inkType, barrelMaterial, barrelColor;
 
-    myPen.displayPenInfo();
+        cout << "\nEnter details for Pen " << i + 1 << ":" << endl;
 
-    cout << "\nPen's ink type using getter: " << myPen.getInkType() << endl;
-    cout << "Barrel's material using getter: " << myPen.getBarrel().getMaterial() << endl;
-    cout << "Barrel's color using getter: " << myPen.getBarrel().getColor() << endl;
+
+        cout << "Enter ink type: ";
+        cin >> inkType;
+        penArray[i].setInkType(inkType);
+
+        cout << "Enter barrel material: ";
+        cin >> barrelMaterial;
+        cout << "Enter barrel color: ";
+        cin >> barrelColor;
+
+        Barrel tempBarrel;
+        tempBarrel.setMaterial(barrelMaterial);
+        tempBarrel.setColor(barrelColor);
+
+        penArray[i].setBarrel(tempBarrel);
+    }
+    for (int i = 0; i < numPens; i++) {
+        cout << "\nPen " << i + 1 << " Information:\n";
+        penArray[i].displayPenInfo();
+    }
 
     return 0;
 }
