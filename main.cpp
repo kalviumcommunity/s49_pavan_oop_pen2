@@ -6,14 +6,13 @@ class Barrel {
 private:
     string material;
     string color;
-    static int totalBarrels;
-
+    static int totalBarrels;  
 public:
     Barrel() {
-        totalBarrels++;
+        totalBarrels++; 
     }
 
-    static int getTotalBarrels() {
+    static int getTotalBarrels() {  
         return totalBarrels;
     }
 
@@ -39,24 +38,24 @@ public:
     }
 
     ~Barrel() {
-        totalBarrels--;
+        totalBarrels--; 
     }
 };
 
-int Barrel::totalBarrels = 0;
+int Barrel::totalBarrels = 0;  
 
 class Pen {
 private:
     string inkType;
     Barrel* barrel;  
-    static int totalPens;
+    static int totalPens;  
 
 public:
     Pen() : barrel(nullptr) {
-        totalPens++;
+        totalPens++;  
     }
 
-    static int getTotalPens() {
+    static int getTotalPens() {  
         return totalPens;
     }
 
@@ -84,13 +83,12 @@ public:
     }
 
     ~Pen() {
-        totalPens--;
-        delete barrel;  
+        totalPens--; 
+        delete barrel; 
     }
 };
 
-int Pen::totalPens = 0;
-
+int Pen::totalPens = 0;  
 int main() {
     const int numPens = 2;
     Pen* penArray = new Pen[numPens]; 
@@ -113,7 +111,7 @@ int main() {
         tempBarrel->setMaterial(barrelMaterial);
         tempBarrel->setColor(barrelColor);
 
-        penArray[i].setBarrel(tempBarrel); 
+        penArray[i].setBarrel(tempBarrel);  
     }
 
     for (int i = 0; i < numPens; i++) {
