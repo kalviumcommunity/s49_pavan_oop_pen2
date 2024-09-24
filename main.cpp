@@ -6,8 +6,16 @@ class Barrel {
 private:
     string material;
     string color;
+    static int totalBarrels; 
 
 public:
+    Barrel() {
+        totalBarrels++; 
+    }
+
+    static int getTotalBarrels() {  
+        return totalBarrels;
+    }
 
     void setMaterial(string material) {
         this->material = material;
@@ -31,12 +39,23 @@ public:
     }
 };
 
+int Barrel::totalBarrels = 0;
+
 class Pen {
 private:
     string inkType;
     Barrel barrel;
+    static int totalPens; 
 
 public:
+    Pen() {
+        totalPens++; 
+    }
+
+    static int getTotalPens() {  
+        return totalPens;
+    }
+
     void setInkType(string inkType) {
         this->inkType = inkType;
     }
@@ -59,15 +78,17 @@ public:
     }
 };
 
+
+int Pen::totalPens = 0;
+
 int main() {
     const int numPens = 2;
-    Pen penArray[numPens];  
+    Pen penArray[numPens];
 
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
 
         cout << "\nEnter details for Pen " << i + 1 << ":" << endl;
-
 
         cout << "Enter ink type: ";
         cin >> inkType;
@@ -84,10 +105,13 @@ int main() {
 
         penArray[i].setBarrel(tempBarrel);
     }
+
     for (int i = 0; i < numPens; i++) {
         cout << "\nPen " << i + 1 << " Information:\n";
         penArray[i].displayPenInfo();
     }
+    cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
+    cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
     return 0;
 }
