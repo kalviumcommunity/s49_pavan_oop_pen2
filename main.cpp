@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 class Barrel {
@@ -36,14 +37,6 @@ public:
 
     void incrementTotalBarrels() {
         totalBarrels++; 
-    }
-
-    void decrementTotalBarrels() {
-        totalBarrels--; 
-    }
-
-    ~Barrel() {
-        decrementTotalBarrels(); 
     }
 };
 
@@ -87,14 +80,6 @@ public:
         totalPens++; 
     }
 
-    void decrementTotalPens() {
-        totalPens--; 
-    }
-
-    ~Pen() {
-        decrementTotalPens(); 
-        delete barrel; 
-    }
 };
 
 int Pen::totalPens = 0;
