@@ -6,12 +6,9 @@ class Barrel {
 private:
     string material;
     string color;
-    static int totalBarrels;  
-public:
-    Barrel() {
-        totalBarrels++; 
-    }
+    static int totalBarrels;
 
+public:
     static int getTotalBarrels() {  
         return totalBarrels;
     }
@@ -37,12 +34,20 @@ public:
         cout << "Barrel Color: " << getColor() << endl;
     }
 
-    ~Barrel() {
+    void incrementTotalBarrels() {
+        totalBarrels++; 
+    }
+
+    void decrementTotalBarrels() {
         totalBarrels--; 
+    }
+
+    ~Barrel() {
+        decrementTotalBarrels(); 
     }
 };
 
-int Barrel::totalBarrels = 0;  
+int Barrel::totalBarrels = 0;
 
 class Pen {
 private:
@@ -51,10 +56,6 @@ private:
     static int totalPens;  
 
 public:
-    Pen() : barrel(nullptr) {
-        totalPens++;  
-    }
-
     static int getTotalPens() {  
         return totalPens;
     }
@@ -82,16 +83,25 @@ public:
         }
     }
 
-    ~Pen() {
+    void incrementTotalPens() {
+        totalPens++; 
+    }
+
+    void decrementTotalPens() {
         totalPens--; 
+    }
+
+    ~Pen() {
+        decrementTotalPens(); 
         delete barrel; 
     }
 };
 
-int Pen::totalPens = 0;  
+int Pen::totalPens = 0;
+
 int main() {
     const int numPens = 2;
-    Pen* penArray = new Pen[numPens]; 
+    Pen* penArray = new Pen[numPens];  
 
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
@@ -108,21 +118,22 @@ int main() {
         cin >> barrelColor;
 
         Barrel* tempBarrel = new Barrel();  
-        tempBarrel->setMaterial(barrelMaterial);
-        tempBarrel->setColor(barrelColor);
+        tempBarrel->setMaterial(barrelMaterial);  
+        tempBarrel->setColor(barrelColor);  
+        tempBarrel->incrementTotalBarrels();  
 
         penArray[i].setBarrel(tempBarrel);  
+        penArray[i].incrementTotalPens();  
     }
 
     for (int i = 0; i < numPens; i++) {
         cout << "\nPen " << i + 1 << " Information:\n";
-        penArray[i].displayPenInfo();
+        penArray[i].displayPenInfo();  
     }
 
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
-    delete[] penArray; 
-
+    delete[] penArray;  
     return 0;
 }
