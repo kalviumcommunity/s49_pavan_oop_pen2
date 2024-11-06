@@ -5,38 +5,38 @@ using namespace std;
 
 class Barrel {
 private:
-    string material;
-    string color;
-    static int totalBarrels;
+    string material;  
+    string color;  
+    static int totalBarrels;  
 
 public:
     static int getTotalBarrels() {  
         return totalBarrels;
     }
 
-    void setMaterial(string material) {
+    void setMaterial(const string& material) {  
         this->material = material;
     }
 
-    void setColor(string color) {
+    void setColor(const string& color) {  
         this->color = color;
     }
 
-    string getMaterial() const {
+    string getMaterial() {  
         return material;
     }
 
-    string getColor() const {
+    string getColor()  {  
         return color;
     }
 
-    void displayBarrelInfo() const {
+    void displayBarrelInfo() {  
         cout << "Barrel Material: " << getMaterial() << endl;
         cout << "Barrel Color: " << getColor() << endl;
     }
 
-    void incrementTotalBarrels() {
-        totalBarrels++; 
+    void incrementTotalBarrels() {  
+        totalBarrels++;  
     }
 };
 
@@ -44,7 +44,7 @@ int Barrel::totalBarrels = 0;
 
 class Pen {
 private:
-    string inkType;
+    string inkType;  
     Barrel* barrel;  
     static int totalPens;  
 
@@ -53,31 +53,28 @@ public:
         return totalPens;
     }
 
-    void setInkType(string inkType) {
+    void setInkType(const string& inkType) {  
         this->inkType = inkType;
     }
 
-    void setBarrel(Barrel* barrel) {
+    void setBarrel(Barrel* barrel) {  
         this->barrel = barrel;
     }
 
-    string getInkType() const {
+    string getInkType() const {  
         return inkType;
     }
 
-    Barrel* getBarrel() const {
+    Barrel* getBarrel() const {  
         return barrel;
     }
 
-    void displayPenInfo() const {
-        cout << "Ink Type: " << getInkType() << endl;
-        if (barrel) {
-            barrel->displayBarrelInfo();
-        }
+    void displayPenInfo() const {  
+        cout << "Ink Type: " << getInkType() ;
     }
 
-    void incrementTotalPens() {
-        totalPens++; 
+    void incrementTotalPens() {  
+        totalPens++;  
     }
 
 };
@@ -85,7 +82,7 @@ public:
 int Pen::totalPens = 0;
 
 int main() {
-    const int numPens = 2;
+    const int numPens = 3;
     Pen* penArray = new Pen[numPens];  
 
     for (int i = 0; i < numPens; i++) {
