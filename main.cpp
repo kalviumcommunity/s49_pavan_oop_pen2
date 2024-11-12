@@ -44,6 +44,8 @@ public:
         return color;
     }
 
+    virtual void displayInfo() const = 0;
+    virtual ~Item() {}  
 
     void displayItemInfo() const {
         cout << "Material: " << getMaterial() << endl;
@@ -74,8 +76,10 @@ public:
         return totalBarrels;
     }
 
-    void displayBarrelInfo() const {
+    void displayInfo() const override {
         cout << "Barrel Info:" << endl;
+        cout << "Material: " << getMaterial() << endl;
+        cout << "Color: " << getColor() << endl;
         displayItemInfo(); 
     void displayBarrelInfo() {  
         cout << "Barrel Material: " << getMaterial() << endl;
@@ -130,23 +134,14 @@ public:
         return barrel;
     }
 
-    void displayPenInfo() const {
+    void displayInfo() const override {
         cout << "Pen Info:" << endl;
         cout << "Ink Type: " << getInkType() << endl;
         if (barrel) {
-            barrel->displayBarrelInfo();
+            barrel->displayInfo();
         }
     void displayPenInfo() const {  
         cout << "Ink Type: " << getInkType() ;
-    }
-
-    void displayPenInfo(string additionalInfo) const {
-        cout << "Pen Info:" << endl;
-        cout << "Ink Type: " << getInkType() << endl;
-        if (barrel) {
-            barrel->displayBarrelInfo();
-        }
-        cout << "Additional Info: " << additionalInfo << endl;
     }
 
     ~Pen() {
@@ -162,6 +157,7 @@ int Pen::totalPens = 0;
 
 int main() {
     const int numPens = 2;
+    Item* itemArray[numPens];  
     Pen* penArray = new Pen[numPens];
     const int numPens = 3;
     Pen* penArray = new Pen[numPens];  
@@ -173,7 +169,6 @@ int main() {
 
         cout << "Enter ink type: ";
         cin >> inkType;
-        penArray[i].setInkType(inkType);
 
         cout << "Enter barrel material: ";
         cin >> barrelMaterial;
@@ -181,6 +176,12 @@ int main() {
         cin >> barrelColor;
 
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
+        itemArray[i] = new Pen(inkType, tempBarrel, barrelMaterial, barrelColor);
+    }
+
+    for (int i = 0; i < numPens; i++) {
+        cout << "\nItem " << i + 1 << " Information:\n";
+        itemArray[i]->displayInfo();
         penArray[i].setBarrel(tempBarrel);
         Barrel* tempBarrel = new Barrel();  
         tempBarrel->setMaterial(barrelMaterial);  
@@ -199,7 +200,9 @@ int main() {
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
-    delete[] penArray;
+    for (int i = 0; i < numPens; i++) {
+        delete itemArray[i]; 
+    }
 
     delete[] penArray;  
     return 0;
