@@ -2,27 +2,18 @@
 #include <string>
 using namespace std;
 
-class Barrel {
-private:
+// Base class for shared attributes
+class Item {
+protected:
     string material;
     string color;
-    static int totalBarrels;
 
 public:
-    // Default constructor
-    Barrel() {
-        totalBarrels++;
-    }
+    Item() : material(""), color("") {}
 
-    // Parameterized constructor
-    Barrel(string material, string color) {
+    Item(string material, string color) {
         this->material = material;
         this->color = color;
-        totalBarrels++;
-    }
-
-    static int getTotalBarrels() {
-        return totalBarrels;
     }
 
     void setMaterial(string material) {
@@ -41,9 +32,33 @@ public:
         return color;
     }
 
+    void displayItemInfo() const {
+        cout << "Material: " << getMaterial() << endl;
+        cout << "Color: " << getColor() << endl;
+    }
+};
+
+// Barrel class inherits from Item (Single Inheritance)
+class Barrel : public Item {
+private:
+    static int totalBarrels;
+
+public:
+    Barrel() : Item() {
+        totalBarrels++;
+    }
+
+    Barrel(string material, string color) : Item(material, color) {
+        totalBarrels++;
+    }
+
+    static int getTotalBarrels() {
+        return totalBarrels;
+    }
+
     void displayBarrelInfo() const {
-        cout << "Barrel Material: " << getMaterial() << endl;
-        cout << "Barrel Color: " << getColor() << endl;
+        cout << "Barrel Info:" << endl;
+        displayItemInfo();  // Using the base class function to display material and color
     }
 
     ~Barrel() {
@@ -53,20 +68,20 @@ public:
 
 int Barrel::totalBarrels = 0;
 
-class Pen {
+// Pen class inherits from Item (Single Inheritance) and also uses Barrel (Multilevel Inheritance)
+class Pen : public Item {
 private:
     string inkType;
     Barrel* barrel;  
     static int totalPens;
 
 public:
-    // Default constructor
-    Pen() : barrel(nullptr) {
+    Pen() : Item(), barrel(nullptr) {
         totalPens++;
     }
 
-    // Parameterized constructor
-    Pen(string inkType, Barrel* barrel) : inkType(inkType), barrel(barrel) {
+    Pen(string inkType, Barrel* barrel, string material, string color)
+        : Item(material, color), inkType(inkType), barrel(barrel) {
         totalPens++;
     }
 
@@ -91,6 +106,7 @@ public:
     }
 
     void displayPenInfo() const {
+        cout << "Pen Info:" << endl;
         cout << "Ink Type: " << getInkType() << endl;
         if (barrel) {
             barrel->displayBarrelInfo();
