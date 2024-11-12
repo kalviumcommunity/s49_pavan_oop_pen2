@@ -3,6 +3,11 @@
 #include <iomanip>
 using namespace std;
 
+class Item {
+protected:
+    string material;
+    string color;
+
 class Barrel {
 private:
     string material;  
@@ -10,13 +15,9 @@ private:
     static int totalBarrels;  
 
 public:
-    // Default constructor
-    Barrel() {
-        totalBarrels++;
-    }
+    Item() : material(""), color("") {}
 
-    // Parameterized constructor
-    Barrel(string material, string color) {
+    Item(string material, string color) {
         this->material = material;
         this->color = color;
         totalBarrels++;
@@ -43,6 +44,33 @@ public:
         return color;
     }
 
+
+    void displayItemInfo() const {
+        cout << "Material: " << getMaterial() << endl;
+        cout << "Color: " << getColor() << endl;
+    }
+};
+
+class Barrel : public Item {
+private:
+    static int totalBarrels;
+
+public:
+    Barrel() : Item() {
+        totalBarrels++;
+    }
+
+    Barrel(string material, string color) : Item(material, color) {
+        totalBarrels++;
+    }
+
+    static int getTotalBarrels() {
+        return totalBarrels;
+    }
+
+    void displayBarrelInfo() const {
+        cout << "Barrel Info:" << endl;
+        displayItemInfo(); 
     void displayBarrelInfo() {  
         cout << "Barrel Material: " << getMaterial() << endl;
         cout << "Barrel Color: " << getColor() << endl;
@@ -55,20 +83,19 @@ public:
 
 int Barrel::totalBarrels = 0;
 
-class Pen {
+class Pen : public Item {
 private:
     string inkType;  
     Barrel* barrel;  
     static int totalPens;  
 
 public:
-    // Default constructor
-    Pen() : barrel(nullptr) {
+    Pen() : Item(), barrel(nullptr) {
         totalPens++;
     }
 
-    // Parameterized constructor
-    Pen(string inkType, Barrel* barrel) : inkType(inkType), barrel(barrel) {
+    Pen(string inkType, Barrel* barrel, string material, string color)
+        : Item(material, color), inkType(inkType), barrel(barrel) {
         totalPens++;
     }
 
@@ -93,6 +120,12 @@ public:
         return barrel;
     }
 
+    void displayPenInfo() const {
+        cout << "Pen Info:" << endl;
+        cout << "Ink Type: " << getInkType() << endl;
+        if (barrel) {
+            barrel->displayBarrelInfo();
+        }
     void displayPenInfo() const {  
         cout << "Ink Type: " << getInkType() ;
     }
@@ -123,7 +156,6 @@ int main() {
         cout << "Enter barrel color: ";
         cin >> barrelColor;
 
-        // Create a barrel using the parameterized constructor
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
         Barrel* tempBarrel = new Barrel();  
         tempBarrel->setMaterial(barrelMaterial);  
