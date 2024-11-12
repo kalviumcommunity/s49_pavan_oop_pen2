@@ -2,7 +2,6 @@
 #include <string>
 using namespace std;
 
-// Base class for shared attributes
 class Item {
 protected:
     string material;
@@ -36,9 +35,14 @@ public:
         cout << "Material: " << getMaterial() << endl;
         cout << "Color: " << getColor() << endl;
     }
+
+    void displayItemInfo(string additionalInfo) const {
+        cout << "Material: " << getMaterial() << endl;
+        cout << "Color: " << getColor() << endl;
+        cout << "Additional Info: " << additionalInfo << endl;
+    }
 };
 
-// Barrel class inherits from Item (Single Inheritance)
 class Barrel : public Item {
 private:
     static int totalBarrels;
@@ -58,7 +62,7 @@ public:
 
     void displayBarrelInfo() const {
         cout << "Barrel Info:" << endl;
-        displayItemInfo();  // Using the base class function to display material and color
+        displayItemInfo(); 
     }
 
     ~Barrel() {
@@ -68,11 +72,10 @@ public:
 
 int Barrel::totalBarrels = 0;
 
-// Pen class inherits from Item (Single Inheritance) and also uses Barrel (Multilevel Inheritance)
 class Pen : public Item {
 private:
     string inkType;
-    Barrel* barrel;  
+    Barrel* barrel;
     static int totalPens;
 
 public:
@@ -113,9 +116,18 @@ public:
         }
     }
 
+    void displayPenInfo(string additionalInfo) const {
+        cout << "Pen Info:" << endl;
+        cout << "Ink Type: " << getInkType() << endl;
+        if (barrel) {
+            barrel->displayBarrelInfo();
+        }
+        cout << "Additional Info: " << additionalInfo << endl;
+    }
+
     ~Pen() {
         totalPens--;
-        delete barrel;  
+        delete barrel;
     }
 };
 
@@ -123,7 +135,7 @@ int Pen::totalPens = 0;
 
 int main() {
     const int numPens = 2;
-    Pen* penArray = new Pen[numPens]; 
+    Pen* penArray = new Pen[numPens];
 
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
@@ -139,10 +151,8 @@ int main() {
         cout << "Enter barrel color: ";
         cin >> barrelColor;
 
-        // Create a barrel using the parameterized constructor
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
-
-        penArray[i].setBarrel(tempBarrel); 
+        penArray[i].setBarrel(tempBarrel);
     }
 
     for (int i = 0; i < numPens; i++) {
@@ -153,7 +163,7 @@ int main() {
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
-    delete[] penArray; 
+    delete[] penArray;
 
     return 0;
 }
