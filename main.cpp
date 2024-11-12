@@ -7,20 +7,16 @@ protected:
     string material;
     string color;
 
-class Barrel {
-private:
-    string material;  
-    string color;  
-    static int totalBarrels;  
-
 public:
     Barrel() : material("Unknown"), color("Unknown") {
         totalBarrels++;
     }
 
-    // Parameterized constructor
+
     Barrel(string material, string color) : material(material), color(color) {
     Item() : material(""), color("") {}
+
+    Item(string material, string color) : material(material), color(color) {}
 
     Item(string material, string color) {
         this->material = material;
@@ -53,9 +49,9 @@ public:
     virtual void displayInfo() const = 0;
     virtual ~Item() {}  
 
-    void displayItemInfo() const {
-        cout << "Material: " << getMaterial() << endl;
-        cout << "Color: " << getColor() << endl;
+    virtual void displayItemInfo() const {
+        cout << "Material: " << material << endl;
+        cout << "Color: " << color << endl;
     }
 
     void displayItemInfo(string additionalInfo) const {
@@ -81,6 +77,9 @@ public:
     static int getTotalBarrels() {
         return totalBarrels;
     }
+    void displayBarrelInfo() const override {
+        cout << "Barrel Info:" << endl;
+        displayItemInfo();
 
     void displayInfo() const override {
         cout << "Barrel Info:" << endl;
@@ -104,9 +103,7 @@ private:
     string inkType;  
     Barrel* barrel;  
     static int totalPens;  
-
 public:
-    // Default constructor
     Pen() : inkType("Unknown"), barrel(nullptr) {
     Pen() : Item(), barrel(nullptr) {
         totalPens++;
@@ -116,7 +113,11 @@ public:
         : Item(material, color), inkType(inkType), barrel(barrel) {
         totalPens++;
     }
+    static int getTotalPens() {
+        return totalPens;
+    }
 
+    void setInkType(const string& inkType) {
     static int getTotalPens() {  
         return totalPens;
     }
@@ -126,19 +127,19 @@ public:
         this->inkType = inkType;
     }
 
-    void setBarrel(Barrel* barrel) {  
+    void setBarrel(Barrel* barrel) {
         this->barrel = barrel;
     }
 
-    string getInkType() const {  
+    string getInkType() const {
         return inkType;
     }
 
-    Barrel* getBarrel() const {  
+    Barrel* getBarrel() const {
         return barrel;
     }
 
-
+    void displayPenInfo() const override {
     void displayPenInfo() const {  
         cout << "Ink Type: " << getInkType() << endl;
         if (barrel != nullptr) {
@@ -149,12 +150,10 @@ public:
 
     void displayInfo() const override {
         cout << "Pen Info:" << endl;
-        cout << "Ink Type: " << getInkType() << endl;
+        cout << "Ink Type: " << inkType << endl;
         if (barrel) {
             barrel->displayInfo();
         }
-    void displayPenInfo() const {  
-        cout << "Ink Type: " << getInkType() ;
     }
 
     ~Pen() {
@@ -168,12 +167,27 @@ public:
 
 int Pen::totalPens = 0;
 
+class Notebook : public Pen, public Barrel {
+private:
+    string brandName;
+
+public:
+    Notebook(string inkType, string material, string color, string brandName)
+        : Pen(inkType, nullptr, material, color), Barrel(material, color), brandName(brandName) {}
+
+    void displayNotebookInfo() {
+        cout << "Notebook Brand: " << brandName << endl;
+        Pen::displayPenInfo();
+        Barrel::displayBarrelInfo();
+    }
+};
+
 int main() {
     const int numPens = 2;
     Item* itemArray[numPens];  
     Pen* penArray = new Pen[numPens];
     const int numPens = 3;
-    Pen* penArray = new Pen[numPens];  
+    Pen* penArray = new Pen[numPens];
 
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
@@ -189,7 +203,8 @@ int main() {
         cin >> barrelColor;
 
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
-        
+        penArray[i].setBarrel(tempBarrel);
+
         penArray[i].setBarrel(tempBarrel);
         itemArray[i] = new Pen(inkType, tempBarrel, barrelMaterial, barrelColor);
     }
@@ -209,11 +224,14 @@ int main() {
 
     for (int i = 0; i < numPens; i++) {
         cout << "\nPen " << i + 1 << " Information:\n";
-        penArray[i].displayPenInfo();  
+        penArray[i].displayPenInfo();
     }
 
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
+
+    Notebook myNotebook("Gel", "Wood", "Red", "BrandX");
+    myNotebook.displayNotebookInfo();
 
     for (int i = 0; i < numPens; i++) {
         delete penArray[i].getBarrel();
@@ -221,10 +239,12 @@ int main() {
     delete[] penArray;
 
 
+
     for (int i = 0; i < numPens; i++) {
         delete itemArray[i]; 
     }
 
     delete[] penArray;  
+
     return 0;
 }
