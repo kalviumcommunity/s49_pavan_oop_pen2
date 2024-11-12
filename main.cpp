@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <iomanip>
 using namespace std;
 
 class Barrel {
@@ -11,22 +10,21 @@ private:
 
 public:
     // Default constructor
-    Barrel() {
+    Barrel() : material("Unknown"), color("Unknown") {
         totalBarrels++;
     }
 
     // Parameterized constructor
-    Barrel(string material, string color) {
-        this->material = material;
-        this->color = color;
+    Barrel(string material, string color) : material(material), color(color) {
         totalBarrels++;
     }
 
-    static int getTotalBarrels() {
+    // Static function to get total barrels
     static int getTotalBarrels() {  
         return totalBarrels;
     }
 
+    // Setters
     void setMaterial(const string& material) {  
         this->material = material;
     }
@@ -35,24 +33,23 @@ public:
         this->color = color;
     }
 
-    string getMaterial() {  
+    // Getters
+    string getMaterial() const {  
         return material;
     }
 
-    string getColor()  {  
+    string getColor() const {  
         return color;
     }
 
-    void displayBarrelInfo() {  
+    // Display barrel information
+    void displayBarrelInfo() const {  
         cout << "Barrel Material: " << getMaterial() << endl;
         cout << "Barrel Color: " << getColor() << endl;
     }
-
-    void incrementTotalBarrels() {  
-        totalBarrels++;  
-    }
 };
 
+// Initialize static member
 int Barrel::totalBarrels = 0;
 
 class Pen {
@@ -63,7 +60,7 @@ private:
 
 public:
     // Default constructor
-    Pen() : barrel(nullptr) {
+    Pen() : inkType("Unknown"), barrel(nullptr) {
         totalPens++;
     }
 
@@ -72,11 +69,12 @@ public:
         totalPens++;
     }
 
-    static int getTotalPens() {
+    // Static function to get total pens
     static int getTotalPens() {  
         return totalPens;
     }
 
+    // Setters
     void setInkType(const string& inkType) {  
         this->inkType = inkType;
     }
@@ -85,6 +83,7 @@ public:
         this->barrel = barrel;
     }
 
+    // Getters
     string getInkType() const {  
         return inkType;
     }
@@ -93,16 +92,18 @@ public:
         return barrel;
     }
 
+    // Display pen information
     void displayPenInfo() const {  
-        cout << "Ink Type: " << getInkType() ;
+        cout << "Ink Type: " << getInkType() << endl;
+        if (barrel != nullptr) {
+            barrel->displayBarrelInfo();
+        } else {
+            cout << "No barrel attached to this pen." << endl;
+        }
     }
-
-    void incrementTotalPens() {  
-        totalPens++;  
-    }
-
 };
 
+// Initialize static member
 int Pen::totalPens = 0;
 
 int main() {
@@ -125,13 +126,8 @@ int main() {
 
         // Create a barrel using the parameterized constructor
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
-        Barrel* tempBarrel = new Barrel();  
-        tempBarrel->setMaterial(barrelMaterial);  
-        tempBarrel->setColor(barrelColor);  
-        tempBarrel->incrementTotalBarrels();  
-
-        penArray[i].setBarrel(tempBarrel);  
-        penArray[i].incrementTotalPens();  
+        
+        penArray[i].setBarrel(tempBarrel);
     }
 
     for (int i = 0; i < numPens; i++) {
@@ -142,6 +138,11 @@ int main() {
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
-    delete[] penArray;  
+    // Clean up memory
+    for (int i = 0; i < numPens; i++) {
+        delete penArray[i].getBarrel();
+    }
+    delete[] penArray;
+
     return 0;
 }
