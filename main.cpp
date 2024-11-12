@@ -10,6 +10,19 @@ private:
     static int totalBarrels;  
 
 public:
+    // Default constructor
+    Barrel() {
+        totalBarrels++;
+    }
+
+    // Parameterized constructor
+    Barrel(string material, string color) {
+        this->material = material;
+        this->color = color;
+        totalBarrels++;
+    }
+
+    static int getTotalBarrels() {
     static int getTotalBarrels() {  
         return totalBarrels;
     }
@@ -49,6 +62,17 @@ private:
     static int totalPens;  
 
 public:
+    // Default constructor
+    Pen() : barrel(nullptr) {
+        totalPens++;
+    }
+
+    // Parameterized constructor
+    Pen(string inkType, Barrel* barrel) : inkType(inkType), barrel(barrel) {
+        totalPens++;
+    }
+
+    static int getTotalPens() {
     static int getTotalPens() {  
         return totalPens;
     }
@@ -99,6 +123,8 @@ int main() {
         cout << "Enter barrel color: ";
         cin >> barrelColor;
 
+        // Create a barrel using the parameterized constructor
+        Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
         Barrel* tempBarrel = new Barrel();  
         tempBarrel->setMaterial(barrelMaterial);  
         tempBarrel->setColor(barrelColor);  
