@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <iomanip>
 using namespace std;
 
 class Item {
@@ -15,15 +14,21 @@ private:
     static int totalBarrels;  
 
 public:
+    Barrel() : material("Unknown"), color("Unknown") {
+        totalBarrels++;
+    }
+
+    // Parameterized constructor
+    Barrel(string material, string color) : material(material), color(color) {
     Item() : material(""), color("") {}
 
     Item(string material, string color) {
         this->material = material;
         this->color = color;
+
         totalBarrels++;
     }
 
-    static int getTotalBarrels() {
     static int getTotalBarrels() {  
         return totalBarrels;
     }
@@ -36,14 +41,15 @@ public:
         this->color = color;
     }
 
-    string getMaterial() {  
+    string getMaterial() const {  
         return material;
     }
 
-    string getColor()  {  
+    string getColor() const {  
         return color;
     }
 
+    void displayBarrelInfo() const {  
     virtual void displayInfo() const = 0;
     virtual ~Item() {}  
 
@@ -85,10 +91,6 @@ public:
         cout << "Barrel Material: " << getMaterial() << endl;
         cout << "Barrel Color: " << getColor() << endl;
     }
-
-    void incrementTotalBarrels() {  
-        totalBarrels++;  
-    }
 };
 
 int Barrel::totalBarrels = 0;
@@ -104,6 +106,8 @@ private:
     static int totalPens;  
 
 public:
+    // Default constructor
+    Pen() : inkType("Unknown"), barrel(nullptr) {
     Pen() : Item(), barrel(nullptr) {
         totalPens++;
     }
@@ -113,11 +117,11 @@ public:
         totalPens++;
     }
 
-    static int getTotalPens() {
     static int getTotalPens() {  
         return totalPens;
     }
 
+   
     void setInkType(const string& inkType) {  
         this->inkType = inkType;
     }
@@ -134,6 +138,15 @@ public:
         return barrel;
     }
 
+
+    void displayPenInfo() const {  
+        cout << "Ink Type: " << getInkType() << endl;
+        if (barrel != nullptr) {
+            barrel->displayBarrelInfo();
+        } else {
+            cout << "No barrel attached to this pen." << endl;
+        }
+
     void displayInfo() const override {
         cout << "Pen Info:" << endl;
         cout << "Ink Type: " << getInkType() << endl;
@@ -149,8 +162,8 @@ public:
         delete barrel;
     void incrementTotalPens() {  
         totalPens++;  
-    }
 
+    }
 };
 
 int Pen::totalPens = 0;
@@ -176,6 +189,8 @@ int main() {
         cin >> barrelColor;
 
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
+        
+        penArray[i].setBarrel(tempBarrel);
         itemArray[i] = new Pen(inkType, tempBarrel, barrelMaterial, barrelColor);
     }
 
@@ -199,6 +214,12 @@ int main() {
 
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
+
+    for (int i = 0; i < numPens; i++) {
+        delete penArray[i].getBarrel();
+    }
+    delete[] penArray;
+
 
     for (int i = 0; i < numPens; i++) {
         delete itemArray[i]; 
