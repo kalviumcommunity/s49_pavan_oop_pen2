@@ -3,6 +3,7 @@
 #include <iomanip>
 using namespace std;
 
+// Base class: Item
 class Item {
 protected:
     string material;
@@ -15,8 +16,9 @@ private:
     static int totalBarrels;  
 
 public:
-    Item() : material(""), color("") {}
+    Item() : material("Unknown"), color("Unknown") {}
 
+<<<<<<< HEAD
     Item(string material, string color) {
         this->material = material;
         this->color = color;
@@ -33,6 +35,15 @@ public:
     }
 
     void setColor(const string& color) {  
+=======
+    Item(string material, string color) : material(material), color(color) {}
+
+    void setMaterial(const string& material) {
+        this->material = material;
+    }
+
+    void setColor(const string& color) {
+>>>>>>> cd281cc (polymorphism11/13)
         this->color = color;
     }
 
@@ -44,19 +55,18 @@ public:
         return color;
     }
 
+<<<<<<< HEAD
 
     void displayItemInfo() const {
+=======
+    virtual void displayItemInfo() const {
+>>>>>>> cd281cc (polymorphism11/13)
         cout << "Material: " << getMaterial() << endl;
         cout << "Color: " << getColor() << endl;
-    }
-
-    void displayItemInfo(string additionalInfo) const {
-        cout << "Material: " << getMaterial() << endl;
-        cout << "Color: " << getColor() << endl;
-        cout << "Additional Info: " << additionalInfo << endl;
     }
 };
 
+// Derived class: Barrel
 class Barrel : public Item {
 private:
     static int totalBarrels;
@@ -75,11 +85,16 @@ public:
     }
 
     void displayBarrelInfo() const {
+<<<<<<< HEAD
         cout << "Barrel Info:" << endl;
         displayItemInfo(); 
     void displayBarrelInfo() {  
         cout << "Barrel Material: " << getMaterial() << endl;
         cout << "Barrel Color: " << getColor() << endl;
+=======
+        cout << "Barrel Info:\n";
+        displayItemInfo();
+>>>>>>> cd281cc (polymorphism11/13)
     }
 
     void incrementTotalBarrels() {  
@@ -89,6 +104,7 @@ public:
 
 int Barrel::totalBarrels = 0;
 
+// Derived class: Pen
 class Pen : public Item {
 private:
     string inkType;
@@ -100,7 +116,7 @@ private:
     static int totalPens;  
 
 public:
-    Pen() : Item(), barrel(nullptr) {
+    Pen() : Item(), inkType("Unknown"), barrel(nullptr) {
         totalPens++;
     }
 
@@ -114,7 +130,11 @@ public:
         return totalPens;
     }
 
+<<<<<<< HEAD
     void setInkType(const string& inkType) {  
+=======
+    void setInkType(const string& inkType) {
+>>>>>>> cd281cc (polymorphism11/13)
         this->inkType = inkType;
     }
 
@@ -131,7 +151,7 @@ public:
     }
 
     void displayPenInfo() const {
-        cout << "Pen Info:" << endl;
+        cout << "Pen Info:\n";
         cout << "Ink Type: " << getInkType() << endl;
         if (barrel) {
             barrel->displayBarrelInfo();
@@ -140,20 +160,15 @@ public:
         cout << "Ink Type: " << getInkType() ;
     }
 
-    void displayPenInfo(string additionalInfo) const {
-        cout << "Pen Info:" << endl;
-        cout << "Ink Type: " << getInkType() << endl;
-        if (barrel) {
-            barrel->displayBarrelInfo();
-        }
-        cout << "Additional Info: " << additionalInfo << endl;
-    }
-
     ~Pen() {
         totalPens--;
+<<<<<<< HEAD
         delete barrel;
     void incrementTotalPens() {  
         totalPens++;  
+=======
+        // Barrel is deleted externally if needed.
+>>>>>>> cd281cc (polymorphism11/13)
     }
 
 };
@@ -169,8 +184,7 @@ int main() {
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
 
-        cout << "\nEnter details for Pen " << i + 1 << ":" << endl;
-
+        cout << "\nEnter details for Pen " << i + 1 << ":\n";
         cout << "Enter ink type: ";
         cin >> inkType;
         penArray[i].setInkType(inkType);
@@ -199,6 +213,10 @@ int main() {
     cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
     cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
 
+    // Free dynamically allocated pens
+    for (int i = 0; i < numPens; i++) {
+        delete penArray[i].getBarrel();  // Delete each barrel manually
+    }
     delete[] penArray;
 
     delete[] penArray;  
