@@ -8,6 +8,11 @@ protected:
     string color;
 
 public:
+    Barrel() {
+        totalBarrels++;
+    }
+
+    Barrel(string material, string color) {
     Barrel() : material("Unknown"), color("Unknown") {
         totalBarrels++;
     }
@@ -167,6 +172,25 @@ public:
 
 int Pen::totalPens = 0;
 
+int main() {
+    const int numPens = 2;
+    Pen* penArray = new Pen[numPens]; 
+
+    for (int i = 0; i < numPens; i++) {
+        string inkType, barrelMaterial, barrelColor;
+
+        cout << "\nEnter details for Pen " << i + 1 << ":" << endl;
+
+        cout << "Enter ink type: ";
+        cin >> inkType;
+        penArray[i].setInkType(inkType);
+
+        cout << "Enter barrel material: ";
+        cin >> barrelMaterial;
+        cout << "Enter barrel color: ";
+        cin >> barrelColor;
+
+        Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
 class Notebook : public Pen, public Barrel {
 private:
     string brandName;
