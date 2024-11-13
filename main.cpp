@@ -9,6 +9,18 @@ protected:
 
 public:
     Item() : material("Unknown"), color("Unknown") {}
+    Barrel() {
+        totalBarrels++;
+    }
+
+    Barrel(string material, string color) {
+    Barrel() : material("Unknown"), color("Unknown") {
+        totalBarrels++;
+    }
+
+
+    Barrel(string material, string color) : material(material), color(color) {
+    Item() : material(""), color("") {}
 
     Item(string material, string color) : material(material), color(color) {}
 
@@ -118,7 +130,7 @@ int Pen::totalPens = 0;
 
 int main() {
     const int numPens = 2;
-    Pen* penArray = new Pen[numPens];
+    Pen* penArray = new Pen[numPens];    Pen* penArray = new Pen[numPens]; 
 
     for (int i = 0; i < numPens; i++) {
         string inkType, barrelMaterial, barrelColor;
@@ -126,6 +138,9 @@ int main() {
         cout << "\nEnter details for Pen " << i + 1 << ":\n";
         cout << "Enter ink type: ";
         cin >> inkType;
+
+        penArray[i].setInkType(inkType);
+
         cout << "Enter barrel material: ";
         cin >> barrelMaterial;
         cout << "Enter barrel color: ";
@@ -147,3 +162,19 @@ int main() {
 
     return 0;
 }
+class Notebook : public Pen, public Barrel {
+private:
+    string brandName;
+
+public:
+    Notebook(string inkType, string material, string color, string brandName)
+        : Pen(inkType, nullptr, material, color), Barrel(material, color), brandName(brandName) {}
+
+    void displayNotebookInfo() {
+        cout << "Notebook Brand: " << brandName << endl;
+        Pen::displayPenInfo();
+        Barrel::displayBarrelInfo();
+    }
+};
+
+
