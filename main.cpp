@@ -9,12 +9,10 @@ private:
     static int totalBarrels;
 
 public:
-    // Default constructor
     Barrel() {
         totalBarrels++;
     }
 
-    // Parameterized constructor
     Barrel(string material, string color) {
         this->material = material;
         this->color = color;
@@ -123,7 +121,6 @@ int main() {
         cout << "Enter barrel color: ";
         cin >> barrelColor;
 
-        // Create a barrel using the parameterized constructor
         Barrel* tempBarrel = new Barrel(barrelMaterial, barrelColor);
 
         penArray[i].setBarrel(tempBarrel); 
