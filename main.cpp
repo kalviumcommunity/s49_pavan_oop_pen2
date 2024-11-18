@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string>
-#include <memory>  // For unique_ptr
-
 using namespace std;
 
-// Base class: Item
 class Item {
 protected:
     string material;
@@ -15,65 +12,45 @@ public:
 
     Item(string material, string color) : material(material), color(color) {}
 
-    void setMaterial(const string& material) {
-        this->material = material;
-    }
+    virtual ~Item() {}
 
-    void setColor(const string& color) {
-        this->color = color;
-    }
+    string getMaterial() const { return material; }
+    string getColor() const { return color; }
 
-    string getMaterial() const {
-        return material;
-    }
+    virtual void displayInfo() const = 0;
 
-    string getColor() const {
-        return color;
+    void printInfo() const {
+        cout << "Material: " << material << ", Color: " << color << endl;
     }
-
-    virtual void displayItemInfo() const {
-        cout << "Material: " << getMaterial() << endl;
-        cout << "Color: " << getColor() << endl;
-    }
-
-    virtual ~Item() = default;  // Virtual destructor for proper polymorphic destruction
 };
 
-// Derived class: Barrel
 class Barrel : public Item {
 private:
     static int totalBarrels;
 
 public:
-    Barrel() : Item() {
-        totalBarrels++;
-    }
+    Barrel() : Item() { totalBarrels++; }
 
     Barrel(string material, string color) : Item(material, color) {
         totalBarrels++;
     }
 
-    static int getTotalBarrels() {
-        return totalBarrels;
+    static int getTotalBarrels() { return totalBarrels; }
+
+    void displayInfo() const override {
+        cout << "Barrel Info: Material = " << material
+             << ", Color = " << color << endl;
     }
 
-    void displayBarrelInfo() const {
-        cout << "Barrel Info:" << endl;
-        displayItemInfo();
-    }
-
-    ~Barrel() override {
-        // Handle any specific cleanup for Barrel objects if needed
-    }
+    ~Barrel() { totalBarrels--; }
 };
 
 int Barrel::totalBarrels = 0;
 
-// Derived class: Pen
 class Pen : public Item {
 private:
     string inkType;
-    unique_ptr<Barrel> barrel;  // Use unique_ptr for ownership
+    Barrel* barrel;
     static int totalPens;
 
 public:
@@ -81,78 +58,55 @@ public:
         totalPens++;
     }
 
-    Pen(string inkType, unique_ptr<Barrel> barrel, string material, string color)
-        : Item(material, color), inkType(inkType), barrel(move(barrel)) {
+    Pen(string inkType, Barrel* barrel, string material, string color)
+        : Item(material, color), inkType(inkType), barrel(barrel) {
         totalPens++;
     }
 
-    static int getTotalPens() {
-        return totalPens;
-    }
+    static int getTotalPens() { return totalPens; }
 
-    void setInkType(const string& inkType) {
-        this->inkType = inkType;
-    }
-
-    void setBarrel(unique_ptr<Barrel> barrel) {
-        this->barrel = move(barrel);
-    }
-
-    string getInkType() const {
-        return inkType;
-    }
-
-    Barrel* getBarrel() const {
-        return barrel.get();
-    }
-
-    void displayPenInfo() const {
-        cout << "Pen Info:\n";
-        cout << "Ink Type: " << getInkType() << endl;
+    void displayInfo() const override {
+        cout << "Pen Info: Material = " << material
+             << ", Color = " << color
+             << ", Ink Type = " << inkType << endl;
         if (barrel) {
-            barrel->displayBarrelInfo();
+            barrel->displayInfo();
+        } else {
+            cout << "No Barrel Attached." << endl;
         }
     }
 
-    ~Pen() override {
-        // No need to explicitly delete the barrel, unique_ptr handles it
+    ~Pen() {
+        totalPens--;
+        delete barrel;
     }
 };
 
 int Pen::totalPens = 0;
 
 int main() {
-    const int numPens = 2;
-    Pen* penArray = new Pen[numPens];
+    Barrel defaultBarrel;
+    cout << "Created Barrel with Default Constructor:\n";
+    defaultBarrel.displayInfo();
+    defaultBarrel.printInfo();
 
-    for (int i = 0; i < numPens; i++) {
-        string inkType, barrelMaterial, barrelColor;
+    Barrel parameterizedBarrel("Wood", "Brown");
+    cout << "\nCreated Barrel with Parameterized Constructor:\n";
+    parameterizedBarrel.displayInfo();
+    parameterizedBarrel.printInfo();
 
-        cout << "\nEnter details for Pen " << i + 1 << ":\n";
-        cout << "Enter ink type: ";
-        cin >> inkType;
-        penArray[i].setInkType(inkType);
+    Pen defaultPen;
+    cout << "\nCreated Pen with Default Constructor:\n";
+    defaultPen.displayInfo();
+    defaultPen.printInfo();
 
-        cout << "Enter barrel material: ";
-        cin >> barrelMaterial;
-        cout << "Enter barrel color: ";
-        cin >> barrelColor;
+    Pen parameterizedPen("Gel", new Barrel("Metal", "Silver"), "Plastic", "Blue");
+    cout << "\nCreated Pen with Parameterized Constructor:\n";
+    parameterizedPen.displayInfo();
+    parameterizedPen.printInfo();
 
-        // Create a new Barrel and transfer ownership to Pen via unique_ptr
-        unique_ptr<Barrel> tempBarrel = make_unique<Barrel>(barrelMaterial, barrelColor);
-        penArray[i].setBarrel(move(tempBarrel));  // Pass ownership of the barrel to Pen
-    }
-
-    for (int i = 0; i < numPens; i++) {
-        cout << "\nPen " << i + 1 << " Information:\n";
-        penArray[i].displayPenInfo();
-    }
-
-    cout << "\nTotal Pens created: " << Pen::getTotalPens() << endl;
-    cout << "Total Barrels created: " << Barrel::getTotalBarrels() << endl;
-
-    // Free dynamically allocated pens
-    delete[] penArray;
+    cout << "\nTotal Barrels: " << Barrel::getTotalBarrels() << endl;
+    cout << "Total Pens: " << Pen::getTotalPens() << endl;
 
     return 0;
 }
