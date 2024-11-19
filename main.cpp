@@ -18,6 +18,10 @@ public:
     string getColor() const { return color; }
 
     virtual void displayInfo() const = 0;
+
+    void printInfo() const {
+        cout << "Material: " << material << ", Color: " << color << endl;
+    }
 };
 
 class Barrel : public Item {
@@ -84,23 +88,25 @@ int main() {
     Barrel defaultBarrel;
     cout << "Created Barrel with Default Constructor:\n";
     defaultBarrel.displayInfo();
+    defaultBarrel.printInfo();
 
     Barrel parameterizedBarrel("Wood", "Brown");
     cout << "\nCreated Barrel with Parameterized Constructor:\n";
     parameterizedBarrel.displayInfo();
+    parameterizedBarrel.printInfo();
 
     Pen defaultPen;
     cout << "\nCreated Pen with Default Constructor:\n";
     defaultPen.displayInfo();
+    defaultPen.printInfo();
 
     Pen parameterizedPen("Gel", new Barrel("Metal", "Silver"), "Plastic", "Blue");
     cout << "\nCreated Pen with Parameterized Constructor:\n";
     parameterizedPen.displayInfo();
+    parameterizedPen.printInfo();
 
     cout << "\nTotal Barrels: " << Barrel::getTotalBarrels() << endl;
     cout << "Total Pens: " << Pen::getTotalPens() << endl;
 
     return 0;
-
-    //checkC$D
 }
