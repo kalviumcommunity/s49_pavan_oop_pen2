@@ -1,6 +1,3 @@
-#include <iostream>
-#include <string>
-using namespace std;
 
 class Item {
 protected:
@@ -110,3 +107,4 @@ int main() {
 
     return 0;
 }
+
